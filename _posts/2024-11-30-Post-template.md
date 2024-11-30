@@ -32,7 +32,7 @@ $$
 \end{equation}
 $$
 
-Can be referenced as $ 2.1.1 $.
+Can be referenced as $$ 2.1.1 $$.
 
 <!-- Inline math in lines, NO blank lines -->
 
