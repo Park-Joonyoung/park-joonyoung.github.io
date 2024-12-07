@@ -25,14 +25,14 @@ $$
 <!-- Equation numbering, keep all blank lines  -->
 
 $$
-\begin{equation}
+\begin{align}
     y = x + 1
-    \label{eq:1}
-    \tag{2.1.1}
-\end{equation}
+\end{align}
+\label{eq:1}
+\tag{2.1.1}
 $$
 
-Can be referenced as $$ 2.1.1 $$.
+Can be referenced as \eqref{eq:1}.
 
 <!-- Inline math in lines, NO blank lines -->
 
