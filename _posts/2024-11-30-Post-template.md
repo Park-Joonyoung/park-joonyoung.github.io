@@ -25,9 +25,9 @@ $$
 <!-- Equation numbering, keep all blank lines  -->
 
 $$
-\begin{align}
+\begin{align*}
     y = x + 1
-\end{align}
+\end{align*}
 \label{eq:1}
 \tag{2.1.1}
 $$
