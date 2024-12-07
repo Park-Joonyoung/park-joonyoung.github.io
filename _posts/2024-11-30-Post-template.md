@@ -26,9 +26,9 @@ $$
 
 $$
 \begin{equation}
-  y = x + 1
-  \label{eq:1}
-  \tag{2.1.1}
+    y = x + 1
+    \label{eq:1}
+    \tag{2.1.1}
 \end{equation}
 $$
 
@@ -46,7 +46,7 @@ Can be referenced as $$ 2.1.1 $$.
 
 # How can I add a code block?
 
-```C++
+```c++
 #include <bits/stdc++.h>
 using namespace std;
 
