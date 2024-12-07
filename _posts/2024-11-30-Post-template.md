@@ -1,5 +1,5 @@
 ---
-title: Post template
+title: Post Template
 description: Short summary of the post
 date: 2024-11-30 18:32
 categories: [Misc, Template]
