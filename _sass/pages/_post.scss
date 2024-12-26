@@ -506,3 +506,12 @@ h4 {
     scroll-margin-top: 2rem;
   }
 }
+
+// user-added
+.content > .indented-paragraph {
+  padding-left: 32px;
+}
+
+.content > .indented-paragraph mjx-container {
+  display: inline !important;
+}
