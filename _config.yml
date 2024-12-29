@@ -16,7 +16,7 @@ timezone: Asia/Seoul
 
 title: Park Joon-young # the main title
 
-tagline: <a href="https://blog.naver.com/sparkjy18">https://blog.naver.com/<br />sparkjy18</a> # it will display as the subtitle
+tagline: <a class="site-subtitle" href="https://blog.naver.com/sparkjy18">https://blog.naver.com/<br />sparkjy18</a> # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   Personal cs/math blog.
