@@ -50,11 +50,21 @@
 
   {{ seo_tags }}
 
+  <!--
   <title>
     {%- unless page.layout == 'home' -%}
       {{ page.title | append: ' | ' }}
     {%- endunless -%}
-    {{ site.title }}
+      {{ site.title }}
+  </title>
+  -->
+
+  <!-- User added -->
+  <title>
+    {%- unless page.layout == 'home' -%}
+      {{ page.title | append: ' | ' }}
+    {%- endunless -%}
+      Park Joon-young
   </title>
 
   {% include_cached favicons.html %}
