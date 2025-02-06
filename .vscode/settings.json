@@ -1,5 +1,6 @@
 {
   "editor.renderWhitespace": "trailing",
+  "editor.wordWrap": "on",
   "workbench.colorCustomizations": {
     "editorWhitespace.foreground": "#ff0000"
   },
