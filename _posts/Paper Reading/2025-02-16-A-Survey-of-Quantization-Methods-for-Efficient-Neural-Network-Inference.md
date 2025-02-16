@@ -260,7 +260,112 @@ As such, the uniform quantization is the de-facto method due to its simplicity a
 
 ### Fine-tuning methods
 
-- Quantization-aware training (QAT):  
-    - Quantization may disturb trained model parameters and push the model away from the point to which it had converged when it was trained with floating point precision.  
-    - By retraining the NN model with quantized parameters, the model can converge to a point with better loss.  
-    - In QAT, the usual forward and backward pass are performed on the quantized model in floating point, but the model parameters are quantized after each gradient update.  
+#### 1. Quantization-aware training (QAT)
+
+Quantization may disturb trained model parameters and push the model away from the point to which it had converged when it was trained with floating point precision.
+By retraining the NN model with quantized parameters, the model can converge to a point with better loss.
+
+In QAT, the usual forward and backward pass are performed on the quantized model in floating point, but the model parameters are quantized after each gradient update.
+
+The way the non-differentiable quantization operator in Eq. \eqref{eq:2} is treated is highly important.
+Without any approximation, the gradient of the quantization operator is zero almost everywhere, since the rounding operation in Eq. \eqref{eq:2} is a piecewise flat operator.
+- Straight through estimator (STE):  
+    - Approximate the gradient of the quantization operator with STE.  
+    - STE ignores the rounding operation and approximates it with an identity function.
+- Stochastic neuron approach
+- Combinatorial optimization
+- Target propagation
+- Gumbel-softmax
+- Regularization operators
+    - Uses regularization operators to quantize the weights (Non-STE)
+    - This method removes the need to use the non-differentiable quantization.
+    - ProxQuant: uses W-shape non-smooth regularization function
+    - Using pulse training to approximate the derivative of discontinuous points
+    - Replacing the quantized weights with an affine combination of floating point and quantized parameters
+    - AdaRound: an adapted rounding method as an alternative to round-to-nearest method.
+
+Non-STE methods require a lot of tuning and so far STE is the most commonly used method.
+
+Some prior work found it effective to learn quantization parameters during QAT as well.
+- PACT: learns the clipping ranges of activations under uniform quantization.
+- QIT: learns quantization steps and levels as an extension to a non-uniform quantization setting.
+- LSQ/LSQ+: introduces a new gradient estimate to learn scaling factors for non-negative/general activations during QAT.
+
+The main disadvantage of QAT is the computational cost of retraining the NN model.
+Therefore, it is a waste to apply QAT to models that have a short lifetime.
+Moreover, QAT needs a sufficient amount of training data for retraining.
+
+#### 2. Post-training quantization (PTQ)
+
+PTQ performs the quantization and the adjustment of the weights without any fine-tuning.
+Thus, the overhead of PTQ is very low and often negligible.
+Also, unlike QAT, it can be used in situations where data is limited or unlabeled.
+However, PTQ results in lower accuracy compared to QAT, especially for low-precision quantization.
+There are several approaches to mitigate the accuracy degradation of PTQ.
+- Bias correction:
+    - Observes inherent bias in the mean and variance of the weight values and correct it.
+- Equalizing the weight ranges:
+    - ACIQ: analyticially computes the optimal clipping range and the channel-wise bitwidth setting for PTQ.
+    - OMSE: removes channel-wise quantization on activation (since it is hard to deploy on hardware) and conduct PTQ by optimizing the L2 distance between the quantized tensor and the corresponding floating point tensor.
+    - Outlier channel splitting (OCS): duplicates and halves the channels containing outlier values
+    - AdaRound: an adaptive rounding method that better reduces the loss.
+
+#### 3. Zero-shot quantization (ZSQ)
+
+In many cases, access to the original training data is not possible during the quantization procedure since the training dataset is either too large or sensitive due to security or private concerns.
+In these circumstances, it is difficult to perform QAT or PTQ.
+To resolve this challenge, ZSQ is proposed.
+ZSQ performs the quantization without any access to the training/validation data, which is particularly important for machine learning as a service (MLaaS).
+
+There are two different levels of zero-shot quantization.
+- Level 1: No data and no fine-tuning (ZSQ + PTQ)
+    - Allows faster and easier quantization without any fine-tuning.
+- Level 2: No data but requires fine-tuning (ZSQ + QAT)
+    - Results in higher accuracy.
+
+A popular branch of research in ZSQ is to generate synthetic data that is similar to the real data from which the target pre-trained model is trained.
+The synthetic data is then used for calibrating and/or fine-tuning the quantized model.
+There are several ways to produce synthetic data.
+- Exploit generative adversarial networks (GANs):
+    - Fails to capture the internal statistics (e.g., distributions of the intermediate layer activations) of the real data.
+- Generating data by minimizing the KL divergence of the internal statistics.
+- ZeroQ:
+    - the synthetic data can be used for sensitivity measurement as well as calibration.
+    - Enables mixed-precision PTQ without access to the training/validation data.
+
+### Stochastic quantization
+
+Stochastic quantization maps the floating number up or down with a probability associated to the magnitude of the weight update.
+For instance, the Int function in Eq. \eqref{eq:2} can be defined as
+
+$$
+\begin{align*}
+    \text{Int}(x) =
+    \begin{cases}
+        \lfloor x \rfloor && \text{with probability} && \lceil x \rceil - x \\
+        \lceil x \rceil && \text{with probability} && x - \lfloor x \rfloor
+    \end{cases}
+\end{align*}
+$$
+
+or, for binary quantization,
+
+$$
+\begin{align*}
+    \text{Binary}(x) =
+    \begin{cases}
+        -1 && \text{with probability} && 1 - \sigma(x) \\
+        +1 && \text{with probability} && \sigma(x)
+    \end{cases}
+\end{align*}
+$$
+
+where Binary is a function to binarize the real value $$ x $$ and $$ \sigma(\cdot) $$ is the sigmoid function.
+
+QuantNoise quantizes a different random subset of weights during each forward pass and trains the model with unbiased gradients.
+This allows lower-bit precision quantization without significant accuracy drop.
+
+A major challenge with stochastic quantization methods is the overhead of creating random numbers for every single weight update.
+Thus, they are not yet widely adopted in practice.
+
+## Advanced concepts: quantization below 8 bits
