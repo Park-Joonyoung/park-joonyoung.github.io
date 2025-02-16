@@ -137,7 +137,7 @@ The process of choosing the clipping range is referred to as calibration.
     - E.g., $$ \alpha = r_{\min} $$, $$ \beta = r_{\max} $$.
 - Symmetric quantization  
     - Chooses a symmetric clipping range $$ (-\alpha = \beta) $$.  
-    - E.g., $$ -\alpha = \beta = \max(|r_{\max}|, \ |r_{\min}|) $$.
+    - E.g., $$ -\alpha = \beta = \max(\vert r_{\max} \vert, \ \vert r_{\min} \vert) $$.
 
 Asymmetric quantization results in a tighter clipping range as compared to symmetric quantization.
 This is important when the target weights or activations are imbalanced (e.g., the activation after ReLU that always has non-negative values).
