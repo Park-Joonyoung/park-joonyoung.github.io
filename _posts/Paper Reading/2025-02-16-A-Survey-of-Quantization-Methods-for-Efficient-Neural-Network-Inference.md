@@ -228,7 +228,7 @@ $$
 \end{align*}
 $$
 
-<p class="indented-paragraph">
+<p class="indent-1">
 $$ \alpha $$: the scaling factor<br>
 $$ \mathbf{b} \in {\{ -1, \ +1 \}}^n \in \mathbb{R}^n $$: the binary vector
 </p>

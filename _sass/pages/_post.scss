@@ -508,12 +508,17 @@ h4 {
 }
 
 // user-added
-.content > .indented-paragraph {
-  padding-left: 32px;
+.content > .indent-1 {
+  padding-left: 2rem;
 }
 
-.content > .indented-paragraph mjx-container {
+.content > .indent-1 mjx-container,
+.content > .indent-2 mjx-container {
   display: inline !important;
+}
+
+.content > .indent-2 {
+  padding-left: 2rem
 }
 
 .mjx-display-style {
