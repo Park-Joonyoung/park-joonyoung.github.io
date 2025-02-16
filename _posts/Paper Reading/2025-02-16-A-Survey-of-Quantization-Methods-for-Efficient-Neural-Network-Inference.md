@@ -76,7 +76,7 @@ $$ N $$: total number of data points.
 $$ (x, \ y) $$: the input data and the corresponding label  
 $$ l(x, \ y; \ \theta) $$: loss function (e.g. MSE/cross entropy)  
 
-Let us denote  
+Denote  
 $$ h_i $$: the input hidden activations of the $$ i $$th layer  
 $$ a_i $$: the corresponding output hidden activation
 
@@ -151,3 +151,82 @@ However, this approach is susceptible to outlier data in the activations.
 - Use percentiles of the signal.  
 Instead of adopting the largest/smallest values, use $$ i $$-th largest/smallest percentiles as $$ \beta $$ and $$ \alpha $$.  
 - Select $$ \alpha $$ and $$ \beta $$ that minimize KL divergence (i.e., information loss)
+
+### Static and dynamic quantization
+
+Another important differentiator of quantization methods is when the clipping range is determined.
+Weights can processed using a static clipping range since in most cases the parameters are fixed during inference.
+Whereas, the activation maps ($$ x $$ in \eqref{eq:1}) differ for each input sample.
+- Dynamic quantization:  
+The range is dynamically calculated for each activation map during runtime.  
+Requires real-time computation of the signal statics (min/max, percentile, etc.), which can have a high overhead.  
+Results in higher accuracy as the signal range is exactly calculated for each input.
+- Static quantization:  
+The clipping range is precalculated and static during inference.  
+Does not add computational overhead.  
+Typically results in lower accuracy.
+Popular methods for static quantization are as follows.
+    - Pre-compute the optimal range of activations:  
+    Minimizing MSE between original unquantized weight distribution and the corresponding quantized values is generally used.
+    - Learn/impose the clipping range during NN training
+
+Calculating the range of a signal dynamically is very expensive.
+As such, practitioners most often use static quantization, where the clliping range is fixed for all inputs.
+
+### Quantization granularity
+
+- Layerwise quantization:  
+The clipping range is determined by considering all of the weights in convolutional filters of a layer, then uses the same clipping range for all of the convolutional filters.  
+Simple to implement.  
+Results in sub-optimal accuracy.
+- Groupwise quantization:  
+Group multiple different channels inside a layer to calculate the clipping range.  
+Is helpful for cases where the distribution of the parameters across a single convolution/activation varies a lot.  
+Requires extra cost of accounting for different scaling factors.
+- Channelwise quantization:  
+Use a fixed value for each convolutional filter.  
+Each channel is assigned a dedicated scaling factor.  
+Ensures a better quantization resolution and results in higher accuracy.  
+- Sub-channelwise quantization:  
+The clippling range is determined with respect to any groups of parameters in a convolution of fully-connected layer.  
+Considerable overhead.
+
+Channelwise quantization is widely adopted.
+
+### Non-uniform quantization
+
+Non-uniform quantization allows quantization steps, as well as quantization levels, to be non-uniformly spaced.
+The formal definition of the non-uniform quantization is as below.
+
+$$
+\begin{align*}
+    Q(r) = X_i, \text{ if } r \in [\delta_i, \ \delta_{i + 1}]
+\end{align*}
+\label{eq:5}
+\tag{5}
+$$
+
+$$ X_i $$: the quantization levels  
+$$ \delta_i $$: the quantization steps (thresholds)
+
+When the value of a real number $$ r $$ falls in between the quantization step $$ \delta_i $$ and $$ \delta_{i + 1} $$, quantizer $$ Q $$ projects it to the corresponding quantization level $$ X_i $$.
+
+Non-uniform quantization may achieve higher accuracy for a fixed bit-width, because one could better capture the distributions by focusing more on important value regions or finding appropriate dynamic ranges.
+
+The category of non-uniform quantizations is as follows.
+- Logarithmic distribution:  
+The quantization steps and levels increase exponentially.
+
+- Binary-code based quantization:  
+A real-number vector $$ \mathbf{r} \in \mathbb{R}^n $$ is quantized into $$ m $$ binary vectors.
+
+$$
+\begin{align*}
+    \mathbf{r} \approx \sum_{i = 1}^m \alpha_i \mathbf{b}_i
+\end{align*}
+$$
+
+<p class="indented-paragraph">
+$$ \alpha $$: the scaling factor<br>
+$$ \mathbf{b} \in {\{ -1, \ +1 \}}^n \in \mathbb{R}^n $$: the binary vector
+</p>
