@@ -450,8 +450,28 @@ $$
 \end{align*}
 $$
 
-<p class="indent-3">
+<p class="indent-2">
 $$ i $$: the index of weights in a tensor<br>
 $$ c_1, \dots, c_k $$: the $$ k $$ centroids found by the clustering<br>
 After clustering, weight $$ w_i $$ will have a cluster index $$ j $$ related to $$ c_j $$ in the look-up table.
 </p>
+
+## Quantization and hardware processors
+
+Edge devices have tight resource constraints including compute, memory, and power budget.
+In addition, many edge processors do not support floating point operations, especially in micro-controllers.
+
+- ARM Cortex-M:
+    - A group of 32-bit RISC ARM processor cores that are designed for low-cost and power-efficient embedded devices.
+    - Because some of the ARM Cortex-M cores do not include floating-point units, the models should first be quantized before deployment.
+- CMSIS-NN:
+    - A library from ARM that helps quantizing and and deploying NN models onto the ARM Cortex-M cores.
+    - Leverages fixed-point quantization with power-of-two scaling factors.
+- GAP-8:
+    - A RISC-V SoC for edge inference with a CNN accelerator.
+    - Only supports integer arithmetic.
+- Google Edge TPU:
+    - A purpose-built ASIC chip.
+    - Designed for small and low-power devices.
+    - Only supports 8-bit arithmetic.
+    - NN models must be quantized using QAT or PTQ of TensorFlow.
