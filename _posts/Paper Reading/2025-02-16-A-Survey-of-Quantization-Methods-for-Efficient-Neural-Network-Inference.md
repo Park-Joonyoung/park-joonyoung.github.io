@@ -50,7 +50,6 @@ NNs bring unique challenges and opportunities to the problem of quantization.
 - Inference and training of NNs are both computationally intensive.  
 Efficient representation of numerical values is important.
 - NN models are heavily over-parameterized.
-
 NNs are very robust to aggressive quantization and extreme discretization.
 
 Due to the over-parameterization, there are many different models that optimize the error metric.
@@ -397,21 +396,21 @@ One challenge with the mixed-precision quantization is that the search space for
 - Periodic function regularization:
     - Automatically distinguish different layers with respect to accuracy while learning their respective bitwidths.
     - HAWQ
-        - uses second-order sensitivity of the model (Hessian).
+        - Uses second-order sensitivity of the model (Hessian).
     - HAWQv2
-        - extends the method used in HAWQ to mixed-precision activation quantization.
+        - Extends the method used in HAWQ to mixed-precision activation quantization.
     - HAWQv3
-        - introduces an integer-only, hardware-aware quantization.
-        - proposes a fast integer linear programming method to find the optimal bit precision for a given application-specific constraint (e.g., model size or latency)
+        - Introduces an integer-only, hardware-aware quantization.
+        - Proposes a fast integer linear programming method to find the optimal bit precision for a given application-specific constraint (e.g., model size or latency).
 
 ### Hardware-aware quantization
 
-The benefits for quantization is hardware-dependant, with many factors such as on-chip memory, bandwith, and cache hierarchy.
-There are some works that uses a reinforcement learning agent to determine the hardware-aware mixed-precision setting for quantization, based on a look-up table of latency with respect to different layers with different bitwidths.
+The benefits of quantization are hardware-dependent, with many factors such as on-chip memory, bandwidth, and cache hierarchy.
+Some works use a reinforcement learning agent to determine the hardware-aware mixed-precision setting for quantization, based on a look-up table of latency with respect to different layers with different bitwidths.
 
 ### Distillation-assisted quantization
 
-Model distillation is a method in which a large model with higher accuracy is used as a teach to help the training of a compact student model.
+Model distillation is a method in which a large model with higher accuracy is used as a teacher model to help the training of a compact student model.
 Model distillation uses the soft probabilities produced by the teacher.
 The overall loss function incorporates both the student loss and the distillation loss.
 
@@ -438,9 +437,9 @@ $$
 
 ### Vector quantization
 
-There are a lot of interesting ideas in the classical quantization methods in digial signal processing that have been applied to vector quantization.
+There are a lot of interesting ideas in the classical quantization methods in digital signal processing that have been applied to vector quantization.
 - Clustering weights:
-    - clusters the weights into different groups and use the centroid of each group as quantized values during inference.
+    - clusters the weights into different groups and uses the centroid of each group as quantized values during inference.
     - Using a k-means clustering is sufficient to reduce the model size up to $$ 8 \times $$ without significant accuracy degradation.
     - Jointly applying k-means based vector quantization with pruning and Huffman coding can further reduce the model size.
 
@@ -458,8 +457,8 @@ After clustering, weight $$ w_i $$ will have a cluster index $$ j $$ related to 
 
 ## Quantization and hardware processors
 
-Edge devices have tight resource constraints including compute, memory, and power budget.
-In addition, many edge processors do not support floating point operations, especially in micro-controllers.
+Edge devices have tight resource constraints including computing, memory, and power budget.
+In addition, many edge processors do not support floating point operations, especially in microcontrollers.
 
 - ARM Cortex-M:
     - A group of 32-bit RISC ARM processor cores that are designed for low-cost and power-efficient embedded devices.
