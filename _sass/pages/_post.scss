@@ -512,13 +512,13 @@ h4 {
   padding-left: 2rem;
 }
 
+.content > .indent-2 {
+  padding-left: 3.5rem
+}
+
 .content > .indent-1 mjx-container,
 .content > .indent-2 mjx-container {
   display: inline !important;
-}
-
-.content > .indent-2 {
-  padding-left: 2rem
 }
 
 .mjx-display-style {
