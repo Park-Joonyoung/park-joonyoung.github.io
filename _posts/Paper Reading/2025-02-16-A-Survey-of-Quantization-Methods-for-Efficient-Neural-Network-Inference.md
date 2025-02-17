@@ -94,7 +94,7 @@ $$
 \end{align*}
 $$
 
-$$ Q $$: quantization operator that maps a floating point value to a quantized one  
+$$ Q $$: quantization operator that maps a floating-point value to a quantized one  
 $$ r $$: a real valued input (activation or weight)  
 $$ S $$: a real valued scaling factor  
 $$ Z $$: integer zero point
@@ -261,10 +261,10 @@ As such, the uniform quantization is the de-facto method due to its simplicity a
 
 #### 1. Quantization-aware training (QAT)
 
-Quantization may disturb trained model parameters and push the model away from the point to which it had converged when it was trained with floating point precision.
+Quantization may disturb trained model parameters and push the model away from the point to which it had converged when it was trained with floating-point precision.
 By retraining the NN model with quantized parameters, the model can converge to a point with better loss.
 
-In QAT, the usual forward and backward pass are performed on the quantized model in floating point, but the model parameters are quantized after each gradient update.
+In QAT, the usual forward and backward pass are performed on the quantized model in floating-point, but the model parameters are quantized after each gradient update.
 
 The way the non-differentiable quantization operator in Eq. \eqref{eq:2} is treated is highly important.
 Without any approximation, the gradient of the quantization operator is zero almost everywhere, since the rounding operation in Eq. \eqref{eq:2} is a piecewise flat operator.
@@ -280,15 +280,15 @@ Without any approximation, the gradient of the quantization operator is zero alm
     - This method removes the need to use the non-differentiable quantization.
     - ProxQuant: uses W-shape non-smooth regularization function
     - Using pulse training to approximate the derivative of discontinuous points
-    - Replacing the quantized weights with an affine combination of floating point and quantized parameters
+    - Replacing the quantized weights with an affine combination of floating-point and quantized parameters
     - AdaRound: an adapted rounding method as an alternative to round-to-nearest method.
 
 Non-STE methods require a lot of tuning and so far STE is the most commonly used method.
 
 Some prior work found it effective to learn quantization parameters during QAT as well.
-- PACT: learns the clipping ranges of activations under uniform quantization.
-- QIT: learns quantization steps and levels as an extension to a non-uniform quantization setting.
-- LSQ/LSQ+: introduces a new gradient estimate to learn scaling factors for non-negative/general activations during QAT.
+- PACT: Learns the clipping ranges of activations under uniform quantization.
+- QIT: Learns quantization steps and levels as an extension to a non-uniform quantization setting.
+- LSQ/LSQ+: Introduces a new gradient estimate to learn scaling factors for non-negative/general activations during QAT.
 
 The main disadvantage of QAT is the computational cost of retraining the NN model.
 Therefore, it is a waste to apply QAT to models that have a short lifetime.
@@ -302,11 +302,11 @@ Also, unlike QAT, it can be used in situations where data is limited or unlabele
 However, PTQ results in lower accuracy compared to QAT, especially for low-precision quantization.
 There are several approaches to mitigate the accuracy degradation of PTQ.
 - Bias correction:
-    - Observes inherent bias in the mean and variance of the weight values and correct it.
+    - Observes inherent bias in the mean and variance of the weight values and corrects it.
 - Equalizing the weight ranges:
-    - ACIQ: analyticially computes the optimal clipping range and the channel-wise bitwidth setting for PTQ.
-    - OMSE: removes channel-wise quantization on activation (since it is hard to deploy on hardware) and conduct PTQ by optimizing the L2 distance between the quantized tensor and the corresponding floating point tensor.
-    - Outlier channel splitting (OCS): duplicates and halves the channels containing outlier values
+    - ACIQ: Analytically computes the optimal clipping range and the channel-wise bitwidth setting for PTQ.
+    - OMSE: Removes channel-wise quantization on activation (since it is hard to deploy on hardware) and conducts PTQ by optimizing the L2 distance between the quantized tensor and the corresponding floating-point tensor.
+    - Outlier channel splitting (OCS): Duplicates and halves the channels containing outlier values.
     - AdaRound: an adaptive rounding method that better reduces the loss.
 
 #### 3. Zero-shot quantization (ZSQ)
@@ -329,7 +329,7 @@ There are several ways to produce synthetic data.
     - Fails to capture the internal statistics (e.g., distributions of the intermediate layer activations) of the real data.
 - Generating data by minimizing the KL divergence of the internal statistics.
 - ZeroQ:
-    - the synthetic data can be used for sensitivity measurement as well as calibration.
+    - The synthetic data can be used for sensitivity measurement as well as calibration.
     - Enables mixed-precision PTQ without access to the training/validation data.
 
 ### Stochastic quantization
@@ -362,7 +362,7 @@ $$
 where Binary is a function to binarize the real value $$ x $$ and $$ \sigma(\cdot) $$ is the sigmoid function.
 
 QuantNoise quantizes a different random subset of weights during each forward pass and trains the model with unbiased gradients.
-This allows lower-bit precision quantization without significant accuracy drop.
+This allows lower-bit precision quantization without a significant accuracy drop.
 
 A major challenge with stochastic quantization methods is the overhead of creating random numbers for every single weight update.
 Thus, they are not yet widely adopted in practice.
@@ -371,12 +371,12 @@ Thus, they are not yet widely adopted in practice.
 
 ### Simulated and integer-only quantization
 
-In simulated (or fake) quantization, the quantized model parameters are stored in low-precision, but the operations are carried out with floating point arithmetic.
-The quantized parameters need to be dequantized before the floating point operations.
+In simulated (or fake) quantization, the quantized model parameters are stored in low-precision, but the operations are carried out with floating-point arithmetic.
+The quantized parameters need to be dequantized before the floating-point operations.
 Conversely, in integer-only quantization, all the operations are performed using low-precision integers.
-The entire inference is carried out without any floating point dequantization for any parameters or activations.
+The entire inference is carried out without any floating-point dequantization for any parameters or activations.
 
-Performing the inference in full-precision with floating point arithmetic may help the final quantization accuracy, but low-precision logic has benefits in terms of latency, power consumption, and area efficiency.
+Performing the inference in full-precision with floating-point arithmetic may help the final quantization accuracy, but low-precision logic has benefits in terms of latency, power consumption, and area efficiency.
 In general, integer-only quantization is more desirable as compared to simulated quantization.
 However, where problems are bandwidth-bound rather than compute-bound, fake quantization methods can be useful.
 
@@ -386,7 +386,7 @@ In this approach, each layer is quantized with different bit precision.
 The layers of an NN are grouped into sensitive/insensitive to quantization, and higher/lower bits are used for them.
 One can minimize accuracy degradation and still benefit from reduced memory footprint and faster speedup with low precision quantization.
 
-One challenge with the mixed-precision quantization is that the search space for selecting layers to quantize is exponential in the number of layers.
+One challenge with mixed-precision quantization is that the search space for selecting layers to quantize is exponential in the number of layers.
 - Exploration-based methods:
     - RL based method:
         - Determines the quantization policy automatically with a reinforcement learning.
@@ -458,7 +458,7 @@ After clustering, weight $$ w_i $$ will have a cluster index $$ j $$ related to 
 ## Quantization and hardware processors
 
 Edge devices have tight resource constraints including computing, memory, and power budget.
-In addition, many edge processors do not support floating point operations, especially in microcontrollers.
+In addition, many edge processors do not support floating-point operations, especially in microcontrollers.
 
 - ARM Cortex-M:
     - A group of 32-bit RISC ARM processor cores that are designed for low-cost and power-efficient embedded devices.
