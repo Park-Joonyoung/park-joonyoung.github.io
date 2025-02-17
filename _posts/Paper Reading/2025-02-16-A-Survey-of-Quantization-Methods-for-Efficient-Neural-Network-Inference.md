@@ -474,3 +474,8 @@ In addition, many edge processors do not support floating-point operations, espe
     - Designed for small and low-power devices.
     - Only supports 8-bit arithmetic.
     - NN models must be quantized using QAT or PTQ of TensorFlow.
+
+---
+
+Sources:
+- [Gholami, A., Kim, S., Dong, Z., Yao, Z., Mahoney, M. W., & Keutzer, K. (2021). A Survey of Quantization Methods for Efficient Neural Network Inference. ArXiv.](https://arxiv.org/abs/2103.13630)
